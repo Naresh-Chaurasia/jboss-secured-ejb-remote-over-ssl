@@ -1,0 +1,29 @@
+# Batch script to configure 2 ways SSL over remoting
+
+# Start batching commands
+batch
+
+
+/core-service=management/security-realm=EJBSSLRealm:add   
+/core-service=management/security-realm=EJBSSLRealm/server-identity=ssl:add(alias=localhost,key-password=password,keystore-password=password,keystore-path="/claude/dev/remote-ejb-certs/localhost.jks",keystore-provider"="JKS")
+/core-service=management/security-realm=EJBSSLRealm/authentication=truststore:add(keystore-password=changeit,keystore-path="/claude/dev/remote-ejb-certs/truststore.jks",keystore-provider"="JKS")
+/core-service=management/security-realm=EJBSSLRealm/authentication=jaas:add(SSLRemotingSecurityDomain)
+
+
+
+/subsystem=security/security-domain=SSLRemotingSecurityDomain:add
+
+/subsystem=security/security-domain=SSLRemotingSecurityDomain/authentication=classic:add
+
+/subsystem=security/security-domain=SSLRemotingSecurityDomain/authentication=classic/login-module=Remoting:add(code="org.jboss.as.security.remoting.ExtendedRemotingLoginModule",flag="optional", module-options={"password-stacking"=> "useFirstPass", "useClientCert"=>"true"})
+
+/subsystem=security/security-domain=SSLRemotingSecurityDomain/authentication=classic/login-module=Certificate:add(code=org.jboss.as.security.auth.ExtendedCertificateLoginModule,flag=required,module-options={"verifier" => "org.jboss.security.auth.certs.AnyCertVerifier" , "password-stacking"=> "useFirstPass", "securityDomain"=>"SSLRemotingSecurityDomain", "roles" => "ejbuser,testuser,admin,user,jmsuser", "defaultRoles" => "guest", "rolesDepth"=>"2"})
+
+
+# Run the batch commands
+run-batch
+
+# Reload the server configuration
+:reload
+
+
