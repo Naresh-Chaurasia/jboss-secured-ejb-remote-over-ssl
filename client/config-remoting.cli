@@ -5,9 +5,9 @@ batch
 
 
 /core-service=management/security-realm=EJBSSLRealm:add   
-/core-service=management/security-realm=EJBSSLRealm/server-identity=ssl:add(alias=localhost,key-password=password,keystore-password=password,keystore-path="/claude/dev/remote-ejb-certs/localhost.jks",keystore-provider"="JKS")
-/core-service=management/security-realm=EJBSSLRealm/authentication=truststore:add(keystore-password=changeit,keystore-path="/claude/dev/remote-ejb-certs/truststore.jks",keystore-provider"="JKS")
-/core-service=management/security-realm=EJBSSLRealm/authentication=jaas:add(SSLRemotingSecurityDomain)
+/core-service=management/security-realm=EJBSSLRealm/server-identity=ssl:add(alias=localhost,key-password=password,keystore-password=password,keystore-path="${jboss.server.config.dir}/remote-ejb-certs/localhost.jks",keystore-provider="JKS")
+/core-service=management/security-realm=EJBSSLRealm/authentication=truststore:add(keystore-password=changeit,keystore-path="${jboss.server.config.dir}/remote-ejb-certs/truststore.jks",keystore-provider="JKS")
+/core-service=management/security-realm=EJBSSLRealm/authentication=jaas:add(name="SSLRemotingSecurityDomain")
 
 
 
